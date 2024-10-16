@@ -6,24 +6,25 @@ import { Cart } from './componentes/Cart/Cart'
 import { Checkout } from './Componentes/Checkout/Checkout'
 import { Error } from './componentes/Error/Error'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { CartServiceContext } from './Componentes/CartServiceContext/CartServiceContext'
+import { db } from './main'
+import { doc, getDoc, getFirestore } from 'firebase/firestore'
 
 function App() {
 
-  const [products, setProducts] = useState([]);
+  const [product, setProduct] = useState(null);
 
   useEffect(() => {
     const db = getFirestore();
     const q = query(collection(db, "item"), where("precio", "<=", 200));
 
-    getDocs(q).then((querySnapshot) => {
+    getDoc(q).then((querySnapshot) => {
       if (querySnapshot.size === 0) {
           
       }
 
-      setProducts(querySnapshot.docs.map((doc) => (
+      setProduct(querySnapshot.docs.map((doc) => (
         { id: doc.id, ...doc.data() }
       )))
     });
